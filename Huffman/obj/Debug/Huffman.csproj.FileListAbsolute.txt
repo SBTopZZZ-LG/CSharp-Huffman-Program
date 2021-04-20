@@ -1,0 +1,13 @@
+C:\Users\Bharat Topinkatti\source\repos\Huffman\Huffman\bin\Debug\Huffman.exe.config
+C:\Users\Bharat Topinkatti\source\repos\Huffman\Huffman\bin\Debug\Huffman.exe
+C:\Users\Bharat Topinkatti\source\repos\Huffman\Huffman\bin\Debug\Huffman.pdb
+C:\Users\Bharat Topinkatti\source\repos\Huffman\Huffman\obj\Debug\Huffman.csprojAssemblyReference.cache
+C:\Users\Bharat Topinkatti\source\repos\Huffman\Huffman\obj\Debug\Huffman.Properties.Resources.resources
+C:\Users\Bharat Topinkatti\source\repos\Huffman\Huffman\obj\Debug\Huffman.csproj.GenerateResource.cache
+C:\Users\Bharat Topinkatti\source\repos\Huffman\Huffman\obj\Debug\Huffman.csproj.CoreCompileInputs.cache
+C:\Users\Bharat Topinkatti\source\repos\Huffman\Huffman\obj\Debug\Huffman.exe
+C:\Users\Bharat Topinkatti\source\repos\Huffman\Huffman\obj\Debug\Huffman.pdb
+C:\Users\Bharat Topinkatti\source\repos\Huffman\Huffman\obj\Debug\Huffman.Form1.resources
+C:\Users\Bharat Topinkatti\source\repos\Huffman\Huffman\bin\Debug\Newtonsoft.Json.dll
+C:\Users\Bharat Topinkatti\source\repos\Huffman\Huffman\bin\Debug\Newtonsoft.Json.xml
+C:\Users\Bharat Topinkatti\source\repos\Huffman\Huffman\obj\Debug\Huffman.csproj.CopyComplete
