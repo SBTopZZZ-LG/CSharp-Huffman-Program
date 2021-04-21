@@ -1,2 +1,7 @@
-Huffman/bin/
-Huffman/obj/
+# Executables
+*.exe
+*.EXE
+
+# Dirs
+/Huffman/obj/
+/Huffman/bin/
