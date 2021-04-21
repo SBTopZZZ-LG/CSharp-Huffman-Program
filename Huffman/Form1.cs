@@ -89,7 +89,13 @@ namespace Huffman
                     new Rectangle(new Point(rectPos.X - 10, rectPos.Y - 10), 
                     new Size(20, 20)));
                 Size prefSize = gfx.MeasureString(item.getValue().ToString(), Font).ToSize();
-                gfx.DrawString(item.getValue().ToString(), Font, Brushes.Red, new Point(rectPos.X - (prefSize.Width / 2), rectPos.Y - ( prefSize.Height / 2 )));
+                gfx.DrawString(item.getValue().ToString(), Font, Brushes.Gray, new Point(rectPos.X - (prefSize.Width / 2), rectPos.Y - ( prefSize.Height / 2 )));
+            
+                if (item.getLabel() != '\u0000')
+                {
+                    prefSize = gfx.MeasureString(item.getLabel().ToString(), Font).ToSize();
+                    gfx.DrawString(item.getLabel().ToString(), Font, Brushes.Black, new Point(rectPos.X - ( prefSize.Width / 2 ), rectPos.Y + 20 - ( prefSize.Height / 2 )));
+                }
             }
         }
 
@@ -246,6 +252,11 @@ namespace Huffman
                 if (action.Invoke(item))
                     return item;
             return null;
+        }
+
+        private void textBox1_TextChanged(object sender, EventArgs e)
+        {
+            button1.Enabled = textBox1.TextLength > 0;
         }
     }
 }
