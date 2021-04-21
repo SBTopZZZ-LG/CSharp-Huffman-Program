@@ -21,15 +21,132 @@ namespace Huffman
 
         private void button1_Click(object sender, EventArgs e)
         {
-            char[] chars = textBox1.Text.ToCharArray();
+            initiate(textBox1.Text);
+        }
+
+        private void initiate(String inputText)
+        {
+            char[] chars = inputText.ToCharArray();
 
             FrequencyItem[] freqs = getCharsFrequencyTable(chars, sort: true);
 
-            TreeNode final = computeFrequencyTreeAsTreeNode(freqs);
-
             treeView1.Nodes.Clear();
-            treeView1.Nodes.Add(final);
+            treeView1.Nodes.Add(computeFrequencyTreeAsTreeNode(freqs));
             treeView1.ExpandAll();
+
+            Node final = computeFrequencyTree(freqs);
+
+            //MessageBox.Show(getLocantOfNode(final).ToString());
+
+            beginDraw(final, getLocantOfNode(final));
+        }
+
+        private int getLocantOfNode(Node root)
+        {
+            int count = 1;
+            Node currentNode = root;
+            while(currentNode.getRightNode() != null)
+            {
+                currentNode = currentNode.getRightNode();
+                count++;
+            }
+            return count;
+        }
+
+        private void beginDraw(Node root, int height)
+        {
+            VisualNode visualRoot = root.createVisualNodeTree();
+
+            generateVisualNodeLocations(ref visualRoot, height);
+
+            const int padding = 20;
+            Size bounds = new Size(pictureBox1.Size.Width - 2 * padding, pictureBox1.Size.Height - 2 * padding);
+
+            List<VisualNode> currentLevelNodes = new List<VisualNode>();
+            currentLevelNodes.Add(visualRoot);
+
+            Graphics gfx = pictureBox1.CreateGraphics();
+            gfx.Clear(SystemColors.Control);
+
+            List<VisualNode> queue = new List<VisualNode>();
+            queue.Add(visualRoot);
+
+            while (queue.Count > 0)
+            {
+                VisualNode item = queue[0];
+                queue.RemoveAt(0);
+
+                if (item.getLeftNode() != null)
+                {
+                    queue.Add(item.getLeftNode());
+                    queue.Add(item.getRightNode());
+                }
+
+                Point rectPos = new Point((int) ( (float) ( bounds.Width + padding ) * item.getLocation().X ),
+                    (int) ( (float) ( bounds.Height + padding ) * item.getLocation().Y ));
+
+                gfx.DrawRectangle(Pens.Black, 
+                    new Rectangle(new Point(rectPos.X - 10, rectPos.Y - 10), 
+                    new Size(20, 20)));
+                Size prefSize = gfx.MeasureString(item.getValue().ToString(), Font).ToSize();
+                gfx.DrawString(item.getValue().ToString(), Font, Brushes.Red, new Point(rectPos.X - (prefSize.Width / 2), rectPos.Y - ( prefSize.Height / 2 )));
+            }
+        }
+
+        private bool generateVisualNodeLocations(ref VisualNode root, int height)
+        {
+            List<VisualNode> queue = new List<VisualNode>();
+            queue.Add(root);
+
+            int level = 1;
+            int counter = queue.Count;
+            while(queue.Count > 0)
+            {
+                if (counter == 0)
+                { 
+                    counter = queue.Count;
+                    level++;
+                }
+
+                VisualNode item = queue[0];
+                queue.RemoveAt(0);
+
+                int[] indexTree = item.getIndexTree();
+
+                PointF bias;
+
+                if (indexTree.Length == 0)
+                {
+                    bias = new PointF(0.5f, 1 / ((float)height + 1));
+                } else
+                {
+                    float LL = 0;
+                    float UL = 1f;
+
+                    foreach (int index in indexTree)
+                    {
+                        float MID = (UL + LL) / 2;
+                        if (index == 0)
+                            UL = MID;
+                        else
+                            LL = MID;
+                    }
+
+                    bias = new PointF((LL + UL) / 2, 1 / ((float) height + 1) * level);
+                }
+
+                item.setLocation(bias);
+
+                counter--;
+
+                if (item.getLeftNode() != null)
+                {
+                    queue.Add(item.getLeftNode());
+                    queue.Add(item.getRightNode());
+                }
+            }
+
+            return true;
         }
 
         private Node computeFrequencyTree(FrequencyItem[] items)
@@ -44,6 +161,8 @@ namespace Huffman
                     item2 = copyItems[1];
 
                 Node newItem = new Node(item1.getValue() + item2.getValue());
+                item1.setParentNode(newItem);
+                item2.setParentNode(newItem);
                 newItem.setLeftNode(item1);
                 newItem.setRightNode(item2);
 

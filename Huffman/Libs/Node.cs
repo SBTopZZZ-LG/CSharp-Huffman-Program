@@ -4,14 +4,20 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+using System.Drawing;
+
 public class Node
 {
-    private Node leftNode;
-    private Node rightNode;
+    public Node leftNode;
+    public Node rightNode;
+    public Node parentNode;
 
-    private char label;
-    private int value;
+    public char label;
+    public int value;
 
+    public Node() {
+        value = 0;
+    }
     public Node(int value)
     {
         this.value = value;
@@ -21,13 +27,22 @@ public class Node
         this.label = label;
         this.value = value;
     }
-    public Node(char label, int value, Node leftNode, Node rightNode)
+    public Node(char label, int value, Node leftNode, Node rightNode, Node parentNode)
     {
         this.label = label;
         this.value = value;
 
         this.leftNode = leftNode;
         this.rightNode = rightNode;
+    }
+
+    public Node getParentNode()
+    {
+        return this.parentNode;
+    }
+    public void setParentNode(Node parentNode)
+    {
+        this.parentNode = parentNode;
     }
 
     public Node getLeftNode()
@@ -57,8 +72,94 @@ public class Node
         return this.value;
     }
 
+    public void setLabel(char label)
+    {
+        this.label = label;
+    }
     public void setValue(int value)
     {
         this.value = value;
+    }
+
+    public VisualNode createVisualNodeTree(VisualNode parent = null)
+    {
+        VisualNode node = new VisualNode(this.parentNode == null ? -1 : (this.parentNode.getLeftNode() == this ? 0 : 1));
+        node.setLeftNode(leftNode != null ? leftNode.createVisualNodeTree(parent: node) : null);
+        node.setRightNode(rightNode != null ? rightNode.createVisualNodeTree(parent: node) : null);
+        node.setParentNode(parent);
+        node.setLabel(label);
+        node.setValue(value);
+
+        return node;
+    }
+}
+
+public class VisualNode : Node
+{
+    public PointF location;
+
+    public new VisualNode leftNode;
+    public new VisualNode rightNode;
+    private VisualNode parentNode;
+
+    public int index = -1;
+
+    public VisualNode(int index)
+    {
+        this.index = index;
+    }
+
+    public int[] getIndexTree()
+    {
+        List<int> ints = new List<int>();
+        if (parentNode != null)
+        {
+            int[] _ints = parentNode.getIndexTree();
+
+            foreach (int _index in _ints)
+                ints.Add(_index);
+
+            ints.Add(index);
+
+            return ints.ToArray();
+        } else
+            return new int[] {};
+    }
+
+    public new VisualNode getParentNode()
+    {
+        return parentNode;
+    }
+    public void setParentNode(VisualNode parentNode)
+    {
+        this.parentNode = parentNode;
+    }
+
+    public new VisualNode getLeftNode()
+    {
+        return leftNode;
+    }
+    public new VisualNode getRightNode()
+    {
+        return rightNode;
+    }
+
+    public void setLeftNode(VisualNode leftNode)
+    {
+        this.leftNode = leftNode;
+    }
+    public void setRightNode(VisualNode rightNode)
+    {
+        this.rightNode = rightNode;
+    }
+
+    public void setLocation(PointF location)
+    {
+        this.location = location;
+    }
+
+    public PointF getLocation()
+    {
+        return location;
     }
 }
