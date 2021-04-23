@@ -92,6 +92,23 @@ public class Node
 
         return node;
     }
+    public Node[] getLowLevelNodes()
+    {
+        List<Node> lowLevelNodes = new List<Node>();
+
+        if (leftNode == null)
+        {
+            lowLevelNodes.Add(this);
+        } else
+        {
+            foreach (Node item in leftNode.getLowLevelNodes())
+                lowLevelNodes.Add(item);
+            foreach (Node item in rightNode.getLowLevelNodes())
+                lowLevelNodes.Add(item);
+        }
+
+        return lowLevelNodes.ToArray();
+    }
 }
 
 public class VisualNode : Node
@@ -100,7 +117,7 @@ public class VisualNode : Node
 
     public new VisualNode leftNode;
     public new VisualNode rightNode;
-    private VisualNode parentNode;
+    private new VisualNode parentNode;
 
     public int index = -1;
 
@@ -124,6 +141,25 @@ public class VisualNode : Node
             return ints.ToArray();
         } else
             return new int[] {};
+    }
+
+    public new VisualNode[] getLowLevelNodes()
+    {
+        List<VisualNode> lowLevelNodes = new List<VisualNode>();
+
+        if (leftNode == null)
+        {
+            lowLevelNodes.Add(this);
+        }
+        else
+        {
+            foreach (VisualNode item in leftNode.getLowLevelNodes())
+                lowLevelNodes.Add(item);
+            foreach (VisualNode item in rightNode.getLowLevelNodes())
+                lowLevelNodes.Add(item);
+        }
+
+        return lowLevelNodes.ToArray();
     }
 
     public new VisualNode getParentNode()

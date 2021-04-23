@@ -11,3 +11,4 @@ C:\Users\Bharat Topinkatti\source\repos\Huffman\Huffman\obj\Debug\Huffman.Form1.
 C:\Users\Bharat Topinkatti\source\repos\Huffman\Huffman\bin\Debug\Newtonsoft.Json.dll
 C:\Users\Bharat Topinkatti\source\repos\Huffman\Huffman\bin\Debug\Newtonsoft.Json.xml
 C:\Users\Bharat Topinkatti\source\repos\Huffman\Huffman\obj\Debug\Huffman.csproj.CopyComplete
+C:\Users\Bharat Topinkatti\source\repos\Huffman\Huffman\obj\Debug\Huffman.Form2.resources

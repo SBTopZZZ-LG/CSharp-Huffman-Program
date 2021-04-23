@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-
+using Huffman.Libs;
 using Newtonsoft.Json;
 
 namespace Huffman
@@ -17,6 +17,8 @@ namespace Huffman
         bool draw = false;
 
         bool isDark = false;
+
+        Node rootNode;
 
         public Form1()
         {
@@ -41,7 +43,34 @@ namespace Huffman
 
             Node final = computeFrequencyTree(freqs);
 
-            beginDraw(final, getLocantOfNode(final));
+            rootNode = final;
+
+            textBox2.Text = encodeToText(final, inputText);
+
+            beginDraw(final);
+        }
+
+        private String encodeToText(Node root, String text)
+        {
+            List<VisualNode> lowLevelNodes = root.createVisualNodeTree().getLowLevelNodes().ToList();
+
+            String encoded = "";
+
+            foreach (char chr in text.ToCharArray())
+            {
+                VisualNode _item = firstWhere(lowLevelNodes,
+                    delegate (VisualNode item)
+                    {
+                        return item.getLabel().Equals(chr);
+                    });
+
+                foreach (int val in _item.getIndexTree())
+                    encoded += val.ToString();
+                encoded += "-";
+            }
+            encoded = encoded.Substring(0, encoded.Length - 1);
+
+            return encoded;
         }
 
         private int getLocantOfNode(Node root)
@@ -56,8 +85,10 @@ namespace Huffman
             return count;
         }
 
-        private void beginDraw(Node root, int height)
+        private void beginDraw(Node root)
         {
+            int height = getLocantOfNode(root);
+
             VisualNode visualRoot = root.createVisualNodeTree();
 
             generateVisualNodeLocations(ref visualRoot, height);
@@ -281,7 +312,7 @@ namespace Huffman
                 FrequencyItem item = null;
 
                 if (items.Count > 0)
-                    item = map(items, 
+                    item = firstWhere(items, 
                         delegate (FrequencyItem _item) {
                             if (_item == null)
                                 return true;
@@ -307,12 +338,22 @@ namespace Huffman
 
             return items.ToArray();
         }
-        private FrequencyItem map(List<FrequencyItem> items, Func<FrequencyItem, bool> action)
+
+        
+        private T firstWhere<T>(List<T> items, Func<T, bool> action)
         {
-            foreach (FrequencyItem item in items)
+            foreach (T item in items)
                 if (action.Invoke(item))
                     return item;
-            return null;
+            return default(T);
+        }
+
+        private T firstWhere<T>(T[] items, Func<T, bool> action)
+        {
+            foreach (T item in items)
+                if (action.Invoke(item))
+                    return item;
+            return default(T);
         }
 
         private void textBox1_TextChanged(object sender, EventArgs e)
@@ -329,6 +370,7 @@ namespace Huffman
         {
             draw = false;
             textBox1.Text = "Huffman";
+            textBox2.Text = "-------";
             treeView1.Nodes.Clear();
             pictureBox1.CreateGraphics().Clear(BackColor);
         }
@@ -346,6 +388,9 @@ namespace Huffman
 
             textBox1.ForeColor = ForeColor;
             textBox1.BackColor = isDark ? SystemColors.Window : BackColor;
+
+            textBox2.ForeColor = ForeColor;
+            textBox2.BackColor = isDark ? SystemColors.Window : BackColor;
 
             groupBox1.ForeColor = ForeColor;
             groupBox2.ForeColor = ForeColor;
@@ -366,5 +411,130 @@ namespace Huffman
             if (Properties.Settings.Default.isDark)
                 button3.PerformClick();
         }
+
+        private void pictureBox1_MouseDoubleClick(object sender, MouseEventArgs e)
+        {
+            Form2 frm2 = new Form2(generateImage, saveImage);
+            frm2.Show();
+        }
+
+        // Callback functions
+
+        private Image generateImage(bool showBranchNumbers, bool showLabels, bool showInformation,
+            Color bgColor, Resolution canvasResolution)
+        {
+            Image img = new Bitmap(canvasResolution.Width, canvasResolution.Height);
+            Graphics gfx = Graphics.FromImage(img);
+            gfx.Clear(bgColor);
+
+            int height = getLocantOfNode(rootNode);
+
+            VisualNode visualRoot = rootNode.createVisualNodeTree();
+
+            generateVisualNodeLocations(ref visualRoot, height);
+
+            const int padding = 20;
+            Size bounds = new Size(img.Size.Width - ( 2 * padding ), img.Size.Height - ( 2 * padding ));
+
+            List<VisualNode> currentLevelNodes = new List<VisualNode>();
+            currentLevelNodes.Add(visualRoot);
+
+            List<VisualNode> queue = new List<VisualNode>();
+            queue.Add(visualRoot);
+
+            // Styles
+            int circleRadius = 30;
+
+            Brush circleFill = Brushes.Black;
+            Pen circleOutline = Pens.Black;
+
+            Brush innerLabelColor = Brushes.White;
+
+            Brush outerLabelColor = Brushes.Black;
+
+            Pen lineColor = Pens.Black;
+
+            Brush branchNumberColor = Brushes.Black;
+            //
+
+            // Draw information
+            if (showInformation)
+                gfx.DrawString("Huffman encoding of '" + textBox1.Text + "'", Font, Brushes.Black, new Point(5, 5));
+            //
+
+            while (queue.Count > 0)
+            {
+                VisualNode item = queue[0];
+                queue.RemoveAt(0);
+
+                if (item.getLeftNode() != null)
+                {
+                    queue.Add(item.getLeftNode());
+                    queue.Add(item.getRightNode());
+                }
+
+                Point rectPos = new Point((int) ( (float) ( bounds.Width + padding ) * item.getLocation().X ),
+                    (int) ( ( bounds.Height + padding ) * item.getLocation().Y ));
+
+                // Draw lines
+                if (item.getLeftNode() != null)
+                {
+                    gfx.DrawLine(lineColor, new PointF(item.getLocation().X * ( bounds.Width + padding ), item.getLocation().Y * ( bounds.Height + padding )),
+                        new PointF(item.getLeftNode().getLocation().X * ( bounds.Width + padding ), item.getLeftNode().getLocation().Y * ( bounds.Height + padding )));
+                    gfx.DrawLine(lineColor, new PointF(item.getLocation().X * ( bounds.Width + padding ), item.getLocation().Y * ( bounds.Height + padding )),
+                        new PointF(item.getRightNode().getLocation().X * ( bounds.Width + padding ), item.getRightNode().getLocation().Y * ( bounds.Height + padding )));
+                }
+                //
+
+                // Draw branch numbers
+                if (item.getLeftNode() != null && showBranchNumbers)
+                {
+                    Size _prefSize = gfx.MeasureString("0", Font).ToSize();
+                    gfx.DrawString("0", Font, branchNumberColor, new PointF(
+                        ( item.getLocation().X * ( bounds.Width + padding )
+                        + item.getLeftNode().getLocation().X * ( bounds.Width + padding ) ) / 2 - ( _prefSize.Width ),
+                        ( item.getLocation().Y * ( bounds.Height + padding )
+                        + item.getLeftNode().getLocation().Y * ( bounds.Height + padding ) ) / 2 - ( _prefSize.Height )));
+                    _prefSize = gfx.MeasureString("1", Font).ToSize();
+                    gfx.DrawString("1", Font, branchNumberColor, new PointF(
+                        ( item.getLocation().X * ( bounds.Width + padding )
+                        + item.getRightNode().getLocation().X * ( bounds.Width + padding ) ) / 2 + ( _prefSize.Width ),
+                        ( item.getLocation().Y * ( bounds.Height + padding )
+                        + item.getRightNode().getLocation().Y * ( bounds.Height + padding ) ) / 2 - ( _prefSize.Height )));
+                }
+                //
+
+                // Draw Circles
+                gfx.FillEllipse(circleFill, new Rectangle(new Point(rectPos.X - circleRadius / 2, rectPos.Y - circleRadius / 2),
+                    new Size(circleRadius, circleRadius)));
+                gfx.DrawEllipse(circleOutline, new Rectangle(new Point(rectPos.X - circleRadius / 2, rectPos.Y - circleRadius / 2),
+                    new Size(circleRadius, circleRadius)));
+                //
+
+                // Inner label
+                Size prefSize = gfx.MeasureString(item.getValue().ToString(), Font).ToSize();
+                gfx.DrawString(item.getValue().ToString(), Font, innerLabelColor, new Point(rectPos.X - ( prefSize.Width / 2 ), rectPos.Y - ( prefSize.Height / 2 )));
+                //
+
+                // Outer label
+                if (item.getLabel() != '\u0000' && showLabels)
+                {
+                    prefSize = gfx.MeasureString(item.getLabel() == ' ' ? "' '" : item.getLabel().ToString(), Font).ToSize();
+                    gfx.DrawString(item.getLabel() == ' ' ? "' '" : item.getLabel().ToString(), Font, outerLabelColor, new Point(rectPos.X - ( prefSize.Width / 2 ), rectPos.Y + circleRadius - ( prefSize.Height / 2 )));
+                }
+                //
+            }
+
+            return img;
+        }
+
+        private void saveImage(Image img)
+        {
+            saveFileDialog1.FileName = textBox1.Text;
+            if (saveFileDialog1.ShowDialog() == DialogResult.OK)
+                img.Save(saveFileDialog1.FileName);
+        }
+
+        //
     }
 }
