@@ -12,3 +12,18 @@ C:\Users\Bharat Topinkatti\source\repos\Huffman\Huffman\bin\Debug\Newtonsoft.Jso
 C:\Users\Bharat Topinkatti\source\repos\Huffman\Huffman\bin\Debug\Newtonsoft.Json.xml
 C:\Users\Bharat Topinkatti\source\repos\Huffman\Huffman\obj\Debug\Huffman.csproj.CopyComplete
 C:\Users\Bharat Topinkatti\source\repos\Huffman\Huffman\obj\Debug\Huffman.Form2.resources
+C:\Users\SBTOPZZZ-PC\Desktop\Projects\GithubCloned\CSharp-Huffman-Program\Huffman\bin\Debug\Huffman.exe.config
+C:\Users\SBTOPZZZ-PC\Desktop\Projects\GithubCloned\CSharp-Huffman-Program\Huffman\bin\Debug\Huffman.exe
+C:\Users\SBTOPZZZ-PC\Desktop\Projects\GithubCloned\CSharp-Huffman-Program\Huffman\bin\Debug\Huffman.pdb
+C:\Users\SBTOPZZZ-PC\Desktop\Projects\GithubCloned\CSharp-Huffman-Program\Huffman\bin\Debug\Newtonsoft.Json.dll
+C:\Users\SBTOPZZZ-PC\Desktop\Projects\GithubCloned\CSharp-Huffman-Program\Huffman\bin\Debug\Newtonsoft.Json.xml
+C:\Users\SBTOPZZZ-PC\Desktop\Projects\GithubCloned\CSharp-Huffman-Program\Huffman\obj\Debug\Huffman.csproj.AssemblyReference.cache
+C:\Users\SBTOPZZZ-PC\Desktop\Projects\GithubCloned\CSharp-Huffman-Program\Huffman\obj\Debug\Huffman.csproj.SuggestedBindingRedirects.cache
+C:\Users\SBTOPZZZ-PC\Desktop\Projects\GithubCloned\CSharp-Huffman-Program\Huffman\obj\Debug\Huffman.Form1.resources
+C:\Users\SBTOPZZZ-PC\Desktop\Projects\GithubCloned\CSharp-Huffman-Program\Huffman\obj\Debug\Huffman.Form2.resources
+C:\Users\SBTOPZZZ-PC\Desktop\Projects\GithubCloned\CSharp-Huffman-Program\Huffman\obj\Debug\Huffman.Properties.Resources.resources
+C:\Users\SBTOPZZZ-PC\Desktop\Projects\GithubCloned\CSharp-Huffman-Program\Huffman\obj\Debug\Huffman.csproj.GenerateResource.cache
+C:\Users\SBTOPZZZ-PC\Desktop\Projects\GithubCloned\CSharp-Huffman-Program\Huffman\obj\Debug\Huffman.csproj.CoreCompileInputs.cache
+C:\Users\SBTOPZZZ-PC\Desktop\Projects\GithubCloned\CSharp-Huffman-Program\Huffman\obj\Debug\Huffman.csproj.CopyComplete
+C:\Users\SBTOPZZZ-PC\Desktop\Projects\GithubCloned\CSharp-Huffman-Program\Huffman\obj\Debug\Huffman.exe
+C:\Users\SBTOPZZZ-PC\Desktop\Projects\GithubCloned\CSharp-Huffman-Program\Huffman\obj\Debug\Huffman.pdb

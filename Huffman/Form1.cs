@@ -305,36 +305,22 @@ namespace Huffman
 
         private FrequencyItem[] getCharsFrequencyTable(char[] chars, bool sort = false)
         {
-            List<FrequencyItem> items = new List<FrequencyItem>();
+            Dictionary<char, FrequencyItem> items_map = new Dictionary<char, FrequencyItem>();
 
             foreach (char chr in chars)
             {
-                FrequencyItem item = null;
-
-                if (items.Count > 0)
-                    item = firstWhere(items, 
-                        delegate (FrequencyItem _item) {
-                            if (_item == null)
-                                return true;
-                            if (_item.getLabel().Equals(chr))
-                                return true;
-                            return false;
-                        });
-
-                if (item == null)
-                {
-                    item = new FrequencyItem(chr, 1);
-                    items.Add(item);
-                }
-                else
-                    item.setFrequency(item.getFrequency() + 1);
+                if (!items_map.ContainsKey(chr))
+                    items_map.Add(chr, new FrequencyItem(chr, 0));
+                items_map[chr].setFrequency(items_map[chr].getFrequency() + 1);
             }
 
+            List<FrequencyItem> items = items_map.Values.ToList();
+
             if (sort)
-                items.OrderBy(delegate (FrequencyItem item)
+                items.Sort(new Comparison<FrequencyItem>(delegate (FrequencyItem item1, FrequencyItem item2)
                 {
-                    return item.getFrequency();
-                });
+                    return item1.getFrequency() - item2.getFrequency();
+                }));
 
             return items.ToArray();
         }
